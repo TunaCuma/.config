@@ -10,10 +10,11 @@ flatpak run org.ferdium.Ferdium &
 i3-msg "workspace 4"
 flatpak run md.obsidian.Obsidian &
 
-i3-msg "workspace 5; exec spotify"
+i3-msg "workspace 5"
+flatpak run com.spotify.Client &
 
 # Start Firefox in workspace 2
 i3-msg "workspace 2; exec firefox"
 
 # Start kitty in workspace 1
-i3-msg "workspace 1; exec kitty"
+i3-msg "workspace 1; exec kitty -e tmux"

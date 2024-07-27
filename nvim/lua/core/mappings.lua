@@ -22,7 +22,13 @@ M.general = {
     ["<C-l>"] = { "<C-w>l", "Window right" },
     ["<C-j>"] = { "<C-w>j", "Window down" },
     ["<C-k>"] = { "<C-w>k", "Window up" },
-
+    -- toggle transparency
+    ["<leader>tt"] = {
+      function()
+        require("base46").toggle_transparency()
+      end,
+      "Toggle transparency",
+    },
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
 
@@ -54,10 +60,6 @@ M.general = {
       "LSP formatting",
     },
 
-    -- { and } will be ğ and ü
-    ["ğ"] = { "{", "Previous paragraph" },
-    ["ü"] = { "}", "Next paragraph" },
-
     ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues"},
 
       -- Add the keybinding for oil.nvim
@@ -73,6 +75,7 @@ M.general = {
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
+    ["<leader>sc"] = { '<cmd>lua require("nvim-silicon").clip()<CR>' , ' "Copy code screenshot to clipboard"' },
   },
 
   x = {

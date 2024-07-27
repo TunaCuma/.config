@@ -13,6 +13,7 @@ set $altMod Mod4
 
 bindsym $altMod+w exec --no-startup-id flatpak run com.ktechpit.whatsie
 bindsym $altMod+t exec --no-startup-id flatpak run org.telegram.desktop
+bindsym $altMod+b exec "zathura ~/personal/books/CIS_Controls__v8.1_Guide__2024_06.pdf"
 
 bindsym $mod+Tab workspace back_and_forth
 
@@ -30,7 +31,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale ~/Pictures/bg.gif
 exec --no-startup-id picom
 exec --no-startup-id i3-battery-popup/i3-battery-popup -n -D -L 20 -l 10
-exec --no-startup-id sh -c "setxkbmap -layout tr,us && setxkbmap -option 'grp:alt_caps_toggle'"
+exec --no-startup-id sh -c "setxkbmap -layout us,tr && setxkbmap -option -option caps:ctrl_modifier && setxkbmap -option 'grp:win_space_toggle'"
 
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -72,7 +73,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+j focus left
 bindsym $mod+k focus down
 bindsym $mod+l focus up
-bindsym $mod+scedilla focus right
+bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -84,7 +85,7 @@ bindsym $mod+Right focus right
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
-bindsym $mod+Shift+scedilla move right
+bindsym $mod+Shift+semicolon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -191,7 +192,7 @@ mode "resize" {
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
-        bindsym scedilla resize grow width 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -222,7 +223,7 @@ bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection c
 bindsym $mod+q exec $HOME/.config/rofi/bin/menu_powermenu
 # bindsym $altMod+space exec $HOME/.config/rofi/bin/launcher_misc
 # bindsym $altMod+space exec "rofi -combi-modi drun,run -show combi -modi combi -show-icons" 
-bindsym $altMod+space exec "albert toggle"
+bindsym $mod+space exec "albert toggle"
 bindsym $altMod+Tab exec "rofi -combi window -show"
 bindsym $mod+$altMod+w exec $HOME/bin/rofi/i3-resurrect
 bindsym $mod+m exec $HOME/bin/rofi/monitor

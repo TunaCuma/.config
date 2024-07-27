@@ -45,11 +45,28 @@ local function border(hl_name)
   }
 end
 
+-- Function to check if copilot has suggestion
+function copilot.has_suggestion()
+  local ok, suggestion = pcall(require, 'copilot.suggestion')
+  if not ok then
+    return false
+  end
+  return suggestion.is_visible()
+end
+
+-- Function to check if current buffer's filetype is markdown
+local function is_markdown_filetype()
+  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+  return filetype == "markdown"
+end
+
 local options = {
+  enabled = function()
+    return not is_markdown_filetype()
+  end,
   completion = {
     completeopt = "menu,menuone",
   },
-
   window = {
     completion = {
       side_padding = (cmp_style ~= "atom" and cmp_style ~= "atom_colored") and 1 or 0,
@@ -66,9 +83,7 @@ local options = {
       require("luasnip").lsp_expand(args.body)
     end,
   },
-
   formatting = formatting_style,
-
   mapping = {
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-n>"] = cmp.mapping.select_next_item(),
@@ -84,7 +99,7 @@ local options = {
       if copilot.has_suggestion() then
         copilot.accept()
       elseif require("luasnip").expand_or_jumpable() then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
       else
         fallback()
       end
@@ -113,14 +128,6 @@ local options = {
     { name = "path" },
   },
 }
--- Function to check if copilot has suggestion
-function copilot.has_suggestion()
-  local ok, suggestion = pcall(require, 'copilot.suggestion')
-  if not ok then
-    return false
-  end
-  return suggestion.is_visible()
-end
 
 if cmp_style ~= "atom" and cmp_style ~= "atom_colored" then
   options.window.completion.border = border "CmpBorder"

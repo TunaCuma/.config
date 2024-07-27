@@ -44,6 +44,9 @@ vim.opt.foldenable = false
 vim.opt.foldlevel = 99
 g.markdown_folding = 1 -- enable markdown folding
 
+-- conceallevel in markdown
+opt.conceallevel = 2
+
 -- disable nvim intro
 opt.shortmess:append "sI"
 

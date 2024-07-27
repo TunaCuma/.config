@@ -22,6 +22,81 @@ local plugins = {
     "williamboman/mason-lspconfig.nvim",
     after = "mason.nvim"
   },
+{
+  "epwalsh/obsidian.nvim",
+  version = "*",  -- recommended, use latest release instead of latest commit
+  lazy = true,
+  ft = "markdown",
+  -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+  -- event = {
+  --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+  --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+  --   "BufReadPre path/to/my-vault/**.md",
+  --   "BufNewFile path/to/my-vault/**.md",
+  -- },
+  dependencies = {
+    -- Required.
+    "nvim-lua/plenary.nvim",
+
+    -- see below for full list of optional dependencies 👇
+  },
+  opts = {
+    workspaces = {
+      {
+        name = "main",
+        path = "~/Desktop/obsidian-vault",
+      },
+    },
+
+    templates = {
+        folder = "~/Desktop/obsidian-vault/Templates",
+      }
+
+    -- see below for full list of options 👇
+  },
+},
+{
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  build = "cd app && npm install && yarn install",
+  init = function()
+    vim.g.mkdp_filetypes = { "markdown" }
+  end,
+  ft = { "markdown" },
+},
+{
+    'JellyApple102/easyread.nvim',
+    lazy = true,
+    ft = "markdown",
+    opts = {
+      fileTypes = { "markdown" },
+    }
+},
+{
+	"michaelrommel/nvim-silicon",
+	lazy = true,
+	cmd = "Silicon",
+	opts = {
+		disable_defaults = true
+	}
+},
+  {
+    "theprimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("harpoon"):setup()
+    end,
+    keys = {
+      { "<leader>A", function() require("harpoon"):list():add() end, desc = "harpoon file", },
+      { "<leader>a", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu", },
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
+      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
+    },
+  },
   {
     "ThePrimeAgen/vim-be-good",
     cmd = "VimBeGood"
