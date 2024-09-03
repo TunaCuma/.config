@@ -60,9 +60,15 @@ local function is_markdown_filetype()
   return filetype == "markdown"
 end
 
+-- Function to check if current buffer's filetype is telescope or oil
+local function is_special_buffer()
+  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+  return filetype == "TelescopePrompt" or filetype == "oil"
+end
+
 local options = {
   enabled = function()
-    return not is_markdown_filetype()
+    return not is_markdown_filetype() and not is_special_buffer()
   end,
   completion = {
     completeopt = "menu,menuone",

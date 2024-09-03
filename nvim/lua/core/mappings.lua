@@ -2,6 +2,33 @@
 
 local M = {}
 
+-- Helper function to get the selected text in visual mode
+function get_visual_selection()
+  vim.cmd('noau normal! "vy"')
+  local selection = vim.fn.getreg('v')
+  vim.fn.setreg('v', {})
+  selection = string.gsub(selection, "\n", "")
+  return selection
+end
+
+-- Function to create an empty markdown file with the name of the selected text
+function create_markdown_file()
+  local selection = get_visual_selection()
+  if selection and selection ~= "" then
+    -- Get the current file's directory
+    local current_file_path = vim.fn.expand('%:p:h')
+    -- Escape spaces in the selection for the filename
+    local file_path = current_file_path .. '/' .. selection .. '.md'
+    local escaped_file_path = vim.fn.shellescape(file_path)
+    local command = string.format(':!touch %s', escaped_file_path)
+    vim.cmd(command)
+    print("Created empty markdown file: " .. file_path)
+  else
+    print("No text selected.")
+  end
+end
+
+
 M.general = {
   i = {
     -- go to  beginning and end
@@ -22,6 +49,9 @@ M.general = {
     ["<C-l>"] = { "<C-w>l", "Window right" },
     ["<C-j>"] = { "<C-w>j", "Window down" },
     ["<C-k>"] = { "<C-w>k", "Window up" },
+
+    ["<leader>ob"] = { "<cmd> bufdo bd <CR>", "close all buffers"},
+
     -- toggle transparency
     ["<leader>tt"] = {
       function()
@@ -37,7 +67,6 @@ M.general = {
 
     -- line numbers
     ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
-    ["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
 
     ["<F5>"] = { "<cmd> UndotreeToggle <CR>", "Toggle Undo Tree"},
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
@@ -60,10 +89,21 @@ M.general = {
       "LSP formatting",
     },
 
+    ["<leader>ot"] = { "<cmd> ObsidianTemplate <CR>", "Insert Obsidian Template" },
+
     ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues"},
 
       -- Add the keybinding for oil.nvim
     ["-"] = { "<cmd>lua require('oil').open()<CR>", "Open oil.nvim" },
+    -- Obsidian
+    ["<leader>os"] = { '<cmd>ObsidianTemplate safeguard template<CR>', "Insert safeguard template" },
+    ["<leader>oc"] = { '<cmd>ObsidianTemplate control template<CR>', "Insert control template" },
+
+    ["<leader>rn"] = { "<cmd> IncRename <CR>", "Rename live" },
+
+
+    ["<leader>om"] = { "<cmd> RenderMarkdown toggle <CR>", "Render Markdown toggle" },
+    ["<leader>oo"] = { "Gzzo", "Insert at bottom" },
   },
 
   t = {
@@ -76,6 +116,8 @@ M.general = {
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
     ["<leader>sc"] = { '<cmd>lua require("nvim-silicon").clip()<CR>' , ' "Copy code screenshot to clipboard"' },
+    -- create a markdown file of selected text
+    ["<leader>gf"] = { '<cmd>lua create_markdown_file()<CR>', "Create markdown file from selected text" },
   },
 
   x = {

@@ -9,7 +9,17 @@ M.ui = {
   -- hl = highlights
   hl_add = {},
   hl_override = {},
-  changed_themes = {},
+  changed_themes = {
+    -- catppuccin= {
+    --   base_16 = {
+    --     base00 = "#000000"
+    --   },
+    --   base_30 = {
+    --     black = "#000000",
+    --     one_bg = "#000000"
+    --   }
+    -- }
+  },
   theme_toggle = { "onedark", "one_light" },
   theme = "onedark", -- default theme
   transparency = true,

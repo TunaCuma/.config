@@ -23,6 +23,55 @@ local plugins = {
     after = "mason.nvim"
   },
 {
+  "folke/zen-mode.nvim",
+    lazy = true,
+    ft = { "markdown" },
+cmd = "ZenMode",
+    dependencies = {
+      {
+        "folke/twilight.nvim",
+        cmd = "Twilight",
+        opts = {
+          treesitter = false,
+          dimming = {
+            alpha = 0.45,
+          },
+        },
+      },
+    },
+    keys = {
+      { "<leader>wt", "<cmd>Twilight<cr>", desc = "Toggle twilight" },
+      { "<leader>wz", "<cmd>ZenMode<cr>", desc = "Toggle zen mode " },
+    },
+  opts = {
+      window = {
+        width = .60,
+        options = {
+          signcolumn = "no",
+          number = false,
+          relativenumber = true,
+          cursorline = true,
+          foldcolumn = "0",
+          list = true,
+        },
+      },
+      plugins = {
+        options = {
+          ruler = true,
+          showcmd = true,
+          laststatus = 2,
+        },
+        tmux = {
+          enabled = true,
+        },
+        kitty = {
+          enabled = true,
+          font = "+4",
+        },
+      }
+  }
+},
+{
   "epwalsh/obsidian.nvim",
   version = "*",  -- recommended, use latest release instead of latest commit
   lazy = true,
@@ -54,16 +103,7 @@ local plugins = {
 
     -- see below for full list of options 👇
   },
-},
-{
-  "iamcco/markdown-preview.nvim",
-  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-  build = "cd app && npm install && yarn install",
-  init = function()
-    vim.g.mkdp_filetypes = { "markdown" }
-  end,
-  ft = { "markdown" },
-},
+  },
 {
     'JellyApple102/easyread.nvim',
     lazy = true,
@@ -71,14 +111,6 @@ local plugins = {
     opts = {
       fileTypes = { "markdown" },
     }
-},
-{
-	"michaelrommel/nvim-silicon",
-	lazy = true,
-	cmd = "Silicon",
-	opts = {
-		disable_defaults = true
-	}
 },
   {
     "theprimeagen/harpoon",

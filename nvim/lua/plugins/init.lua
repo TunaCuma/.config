@@ -17,7 +17,17 @@ local default_plugins = {
     branch = "v2.0",
     lazy = false,
   },
-
+  {
+    "olrtg/nvim-rename-state",
+    lazy = false,
+  },
+  {
+    "smjonas/inc-rename.nvim",
+    config = function()
+      require("inc_rename").setup()
+    end,
+    lazy = false,
+  },
   {
     "zbirenbaum/nvterm",
     init = function()

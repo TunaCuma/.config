@@ -14,6 +14,7 @@ set $altMod Mod4
 bindsym $altMod+w exec --no-startup-id flatpak run com.ktechpit.whatsie
 bindsym $altMod+t exec --no-startup-id flatpak run org.telegram.desktop
 bindsym $altMod+b exec "zathura ~/personal/books/CIS_Controls__v8.1_Guide__2024_06.pdf"
+bindsym $altMod+f exec "exec firefox"
 
 bindsym $mod+Tab workspace back_and_forth
 
@@ -33,7 +34,6 @@ exec --no-startup-id picom
 exec --no-startup-id i3-battery-popup/i3-battery-popup -n -D -L 20 -l 10
 exec --no-startup-id sh -c "setxkbmap -layout us,tr && setxkbmap -option -option caps:ctrl_modifier && setxkbmap -option 'grp:win_space_toggle'"
 
-
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -51,9 +51,13 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
+
+bindsym $mod+Shift+b exec --no-startup-id redshift -O 4500
+bindsym $mod+Shift+n exec --no-startup-id redshift -x
 
 # start a terminal
 bindsym $mod+Return exec kitty
@@ -68,6 +72,8 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 # There also is i3-dmenu-desktop which only displays applications shipping a
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+
+bindsym $mod+p exec --no-startup-id dunstctl close-all
 
 # change focus
 bindsym $mod+j focus left
@@ -156,6 +162,7 @@ workspace $ws4 output $monitor_left
 workspace $ws5 output $monitor_left
 workspace $ws6 output $monitor_left
 workspace $ws7 output $monitor_left
+workspace $ws10 output $monitor_right
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -170,7 +177,7 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # assign workspace for windows
-for_window [class="Ferdium"] move to workspace number $ws3
+for_window [class="Vivaldi-stable"] move to workspace number $ws3
 for_window [class="obsidian"] move to workspace number $ws4
 for_window [class="Spotify"] move to workspace number $ws5
 
@@ -223,7 +230,7 @@ bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection c
 bindsym $mod+q exec $HOME/.config/rofi/bin/menu_powermenu
 # bindsym $altMod+space exec $HOME/.config/rofi/bin/launcher_misc
 # bindsym $altMod+space exec "rofi -combi-modi drun,run -show combi -modi combi -show-icons" 
-bindsym $mod+space exec "albert toggle"
+# bindsym $mod+space exec "albert toggle"
 bindsym $altMod+Tab exec "rofi -combi window -show"
 bindsym $mod+$altMod+w exec $HOME/bin/rofi/i3-resurrect
 bindsym $mod+m exec $HOME/bin/rofi/monitor
