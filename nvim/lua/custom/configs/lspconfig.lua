@@ -1,4 +1,4 @@
-
+-- Import necessary modules
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 local lspconfig = require("lspconfig")
@@ -39,14 +39,43 @@ lspconfig.emmet_language_server.setup {
   },
 }
 
-
-
 -- Setup other servers
-local servers = {"tsserver", "tailwindcss", "eslint", "cssls"}
+local servers = {"ts_ls", "tailwindcss", "eslint", "cssls"}
 
-for _, lsp in ipairs(servers) do lspconfig[lsp].setup {
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
     on_attach = on_attach,
     capabilities = capabilities,
   }
 end
 
+-- Setup Lua language server
+lspconfig.lua_ls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = {
+        -- LuaJIT in the case of Neovim
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = vim.split(package.path, ';'),
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.stdpath('config') .. '/lua'] = true,
+        },
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}

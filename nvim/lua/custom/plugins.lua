@@ -10,23 +10,50 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        "luacheck",
         "eslint-lsp",
         "prettierd",
         "tailwindcss-language-server",
         "typescript-language-server",
         "emmet-language-server",
+        "lua-language-server",
       },
     },
   },
   {
-    "williamboman/mason-lspconfig.nvim",
-    after = "mason.nvim"
+    "Aasim-A/scrollEOF.nvim",
+    lazy = false,
+    config = function()
+      -- This is where you can configure scrollEOF.nvim
+      require("scrollEOF").setup {
+        -- Example settings: You can customize these options
+        pattern = "*",           -- Default is '*'
+        insert_mode = false,     -- Default is false
+        disabled_filetypes = {}, -- Default is empty list
+        disabled_modes = {},     -- Default is empty list
+      }
+    end,
   },
-{
-  "folke/zen-mode.nvim",
+  {
+    "Febri-i/snake.nvim",
+    dependencies = {
+      "Febri-i/fscreen.nvim",
+    },
+    opts = {},
+    cmd = "SnakeStart",
+    keys = {
+      { "<leader>ss", "<cmd>SnakeStart<cr>", desc = "Start Snake Game" },
+    },
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    after = "mason.nvim",
+  },
+  {
+    "folke/zen-mode.nvim",
     lazy = true,
     ft = { "markdown" },
-cmd = "ZenMode",
+    cmd = "ZenMode",
     dependencies = {
       {
         "folke/twilight.nvim",
@@ -41,11 +68,11 @@ cmd = "ZenMode",
     },
     keys = {
       { "<leader>wt", "<cmd>Twilight<cr>", desc = "Toggle twilight" },
-      { "<leader>wz", "<cmd>ZenMode<cr>", desc = "Toggle zen mode " },
+      { "<leader>wz", "<cmd>ZenMode<cr>",  desc = "Toggle zen mode " },
     },
-  opts = {
+    opts = {
       window = {
-        width = .60,
+        width = 0.60,
         options = {
           signcolumn = "no",
           number = false,
@@ -68,50 +95,139 @@ cmd = "ZenMode",
           enabled = true,
           font = "+4",
         },
-      }
-  }
-},
-{
-  "epwalsh/obsidian.nvim",
-  version = "*",  -- recommended, use latest release instead of latest commit
-  lazy = true,
-  ft = "markdown",
-  -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-  -- event = {
-  --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-  --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-  --   "BufReadPre path/to/my-vault/**.md",
-  --   "BufNewFile path/to/my-vault/**.md",
-  -- },
-  dependencies = {
-    -- Required.
-    "nvim-lua/plenary.nvim",
-
-    -- see below for full list of optional dependencies 👇
-  },
-  opts = {
-    workspaces = {
-      {
-        name = "main",
-        path = "~/Desktop/obsidian-vault",
       },
     },
-
-    templates = {
-        folder = "~/Desktop/obsidian-vault/Templates",
-      }
-
-    -- see below for full list of options 👇
   },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {},
+    dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
+    ft = { "markdown" },
   },
-{
-    'JellyApple102/easyread.nvim',
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
     lazy = true,
     ft = "markdown",
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+    --   "BufReadPre path/to/my-vault/**.md",
+    --   "BufNewFile path/to/my-vault/**.md",
+    -- },
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+
+      -- see below for full list of optional dependencies 👇
+    },
     opts = {
-      fileTypes = { "markdown" },
-    }
-},
+      workspaces = {
+        {
+          name = "main",
+          path = "~/Desktop/obsidian-vault",
+        },
+      },
+
+      templates = {
+        folder = "~/Desktop/obsidian-vault/Templates",
+      },
+      ui = {
+        enable = false,
+      },
+
+      -- see below for full list of options 👇
+    },
+  },
+  -- {
+  --     'JellyApple102/easyread.nvim',
+  --     lazy = true,
+  --     ft = "markdown",
+  --     opts = {
+  --       fileTypes = { "markdown" },
+  --     },
+  -- keys = {
+  --       { "<leader>er", "<cmd>EasyreadToggle<cr>", desc = "Toggle easyread" },
+  --     },
+  -- },
+  {
+    -- Add easytables.nvim plugin
+    {
+      "Myzel394/easytables.nvim",
+      config = function()
+        require("easytables").setup {
+          -- Your custom configuration for easytables
+        }
+      end,
+      -- Optional: Add lazy loading settings if needed
+      -- For example, load on specific commands or file types
+      -- event = "VeryLazy", -- Uncomment to lazy load on event
+      cmd = { "EasyTablesCreateNew", "EasyTablesImportThisTable" }, -- Uncomment to lazy load on commands
+      keys = {
+        { "<leader>tc", "<cmd>EasyTablesCreateNew 4x4<cr>",   desc = "Create new table" },
+        { "<leader>ti", "<cmd>EasyTablesImportThisTable<cr>", desc = "Import table" },
+        { "<leader>ts", "<cmd>ExportTable<cr>",               desc = "Export table" },
+      },
+    },
+  },
+  {
+    "vhyrro/luarocks.nvim",
+    priority = 1001, -- this plugin needs to run before anything else
+    opts = {
+      rocks = { "magick" },
+    },
+  },
+  {
+    "3rd/image.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+          require("nvim-treesitter.configs").setup {
+            ensure_installed = { "markdown" },
+            highlight = { enable = true },
+          }
+        end,
+      },
+    },
+    opts = {
+      backend = "kitty",
+      integrations = {
+        markdown = {
+          enabled = true,
+          resolve_image_path = function(document_path, image_path, fallback)
+            -- Define the base path of your vault
+            local vault_base_path = "~/Desktop/obsidian-vault"
+
+            -- Concatenate the vault base path with the image_path
+            local adjusted_path = vault_base_path .. "/" .. image_path
+
+            -- Return the adjusted absolute path
+            return adjusted_path
+          end,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = true,
+          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+        },
+        neorg = {
+          enabled = true,
+          clear_in_insert_mode = true,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "norg" },
+        },
+      },
+      max_width = nil,
+      max_height = nil,
+      max_width_window_percentage = nil,
+      max_height_window_percentage = 50,
+      kitty_method = "normal",
+    },
+  },
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
@@ -120,39 +236,82 @@ cmd = "ZenMode",
       require("harpoon"):setup()
     end,
     keys = {
-      { "<leader>A", function() require("harpoon"):list():add() end, desc = "harpoon file", },
-      { "<leader>a", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu", },
-      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
-      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
-      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
-      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
-      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
+      {
+        "<leader>A",
+        function()
+          require("harpoon"):list():add()
+        end,
+        desc = "harpoon file",
+      },
+      {
+        "<leader>a",
+        function()
+          local harpoon = require "harpoon"
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = "harpoon quick menu",
+      },
+      {
+        "<leader>1",
+        function()
+          require("harpoon"):list():select(1)
+        end,
+        desc = "harpoon to file 1",
+      },
+      {
+        "<leader>2",
+        function()
+          require("harpoon"):list():select(2)
+        end,
+        desc = "harpoon to file 2",
+      },
+      {
+        "<leader>3",
+        function()
+          require("harpoon"):list():select(3)
+        end,
+        desc = "harpoon to file 3",
+      },
+      {
+        "<leader>4",
+        function()
+          require("harpoon"):list():select(4)
+        end,
+        desc = "harpoon to file 4",
+      },
+      {
+        "<leader>5",
+        function()
+          require("harpoon"):list():select(5)
+        end,
+        desc = "harpoon to file 5",
+      },
     },
   },
   {
     "ThePrimeAgen/vim-be-good",
-    cmd = "VimBeGood"
+    cmd = "VimBeGood",
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
-    event = "BufReadPost"
+    event = "BufReadPost",
   },
   {
     "mbbill/undotree",
-    cmd = "UndotreeToggle"
+    cmd = "UndotreeToggle",
   },
   {
     "tpope/vim-fugitive",
-    cmd = { "Git", "Gstatus", "Gcommit", "Gpush" }
+    cmd = { "Git", "Gstatus", "Gcommit", "Gpush" },
   },
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     lazy = false,
     config = function()
-      require("copilot").setup({
+      require("copilot").setup {
         panel = {
-          auto_refresh = true
+          auto_refresh = true,
         },
         suggestion = {
           auto_trigger = true,
@@ -164,9 +323,9 @@ cmd = "ZenMode",
             -- next = "<M-ü>",
             -- prev = "<M-ğ>",
             dismiss = "<S-Tab>",
-          }
-        }
-      })
+          },
+        },
+      }
     end,
   },
   {
@@ -178,28 +337,40 @@ cmd = "ZenMode",
   },
   {
     "windwp/nvim-ts-autotag",
-    ft = {"javascript", "javascriptreact", "typescript", "typescriptreact"},
+    ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     config = function()
       require("nvim-ts-autotag").setup()
     end,
   },
   {
-    'stevearc/oil.nvim',
+    "stevearc/oil.nvim",
     opts = {},
     -- Optional dependencies
     dependencies = { { "echasnovski/mini.icons", opts = {} } },
     -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
     config = function()
-      require("oil").setup({
+      require("oil").setup {
         skip_confirm_for_simple_edits = true,
         lsp_file_methods = {
-            -- Time to wait for LSP file operations to complete before skipping
-            timeout_ms = 500000,
-            -- Set to true to autosave buffers that are updated with LSP willRenameFiles
-            -- Set to "unmodified" to only save unmodified buffers
-            autosave_changes = "unmodified",
-          },
-      })
+          -- Time to wait for LSP file operations to complete before skipping
+          timeout_ms = 500000,
+          -- Set to true to autosave buffers that are updated with LSP willRenameFiles
+          -- Set to "unmodified" to only save unmodified buffers
+          autosave_changes = "unmodified",
+        },
+        view_options = {
+          -- Show files and directories that start with "."
+          show_hidden = true,
+          -- This function defines what is considered a "hidden" file
+          is_hidden_file = function(name, bufnr)
+            return vim.startswith(name, ".")
+          end,
+          -- This function defines what will never be shown, even when `show_hidden` is set
+          is_always_hidden = function(name, bufnr)
+            return false
+          end,
+        },
+      }
     end,
   },
   {
@@ -211,10 +382,10 @@ cmd = "ZenMode",
         "javascript",
         "typescript",
         "tsx",
-        "css"
+        "css",
       }
       return opts
     end,
-  }
+  },
 }
 return plugins

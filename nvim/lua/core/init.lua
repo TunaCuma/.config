@@ -47,6 +47,8 @@ g.markdown_folding = 1 -- enable markdown folding
 -- conceallevel in markdown
 opt.conceallevel = 0
 
+vim.opt.linebreak = true
+
 -- cursor scroll off
 opt.scrolloff = 8
 

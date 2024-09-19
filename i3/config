@@ -14,9 +14,13 @@ set $altMod Mod4
 bindsym $altMod+w exec --no-startup-id flatpak run com.ktechpit.whatsie
 bindsym $altMod+t exec --no-startup-id flatpak run org.telegram.desktop
 bindsym $altMod+b exec "zathura ~/personal/books/CIS_Controls__v8.1_Guide__2024_06.pdf"
+bindsym $altMod+s exec "zathura ~/personal/books/mccllelan-signal-processing-first-2003.pdf"
 bindsym $altMod+f exec "exec firefox"
 
 bindsym $mod+Tab workspace back_and_forth
+
+bindsym $mod+Shift+h exec --no-startup-id xrandr --output HDMI-1 --auto --right-of eDP-1
+bindsym $mod+Shift+y exec --no-startup-id xrandr --output HDMI-1 --off
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -28,6 +32,7 @@ font pango: BlexMono Nerd Font 8
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id xset s off
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale ~/Pictures/bg.gif
 exec --no-startup-id picom
