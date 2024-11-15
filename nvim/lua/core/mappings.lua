@@ -4,9 +4,9 @@ local M = {}
 
 -- Helper function to get the selected text in visual mode
 function get_visual_selection()
-  vim.cmd('noau normal! "vy"')
-  local selection = vim.fn.getreg('v')
-  vim.fn.setreg('v', {})
+  vim.cmd 'noau normal! "vy"'
+  local selection = vim.fn.getreg "v"
+  vim.fn.setreg("v", {})
   selection = string.gsub(selection, "\n", "")
   return selection
 end
@@ -16,18 +16,17 @@ function create_markdown_file()
   local selection = get_visual_selection()
   if selection and selection ~= "" then
     -- Get the current file's directory
-    local current_file_path = vim.fn.expand('%:p:h')
+    local current_file_path = vim.fn.expand "%:p:h"
     -- Escape spaces in the selection for the filename
-    local file_path = current_file_path .. '/' .. selection .. '.md'
+    local file_path = current_file_path .. "/" .. selection .. ".md"
     local escaped_file_path = vim.fn.shellescape(file_path)
-    local command = string.format(':!touch %s', escaped_file_path)
+    local command = string.format(":!touch %s", escaped_file_path)
     vim.cmd(command)
     print("Created empty markdown file: " .. file_path)
   else
-    print("No text selected.")
+    print "No text selected."
   end
 end
-
 
 M.general = {
   i = {
@@ -50,7 +49,7 @@ M.general = {
     ["<C-j>"] = { "<C-w>j", "Window down" },
     ["<C-k>"] = { "<C-w>k", "Window up" },
 
-    ["<leader>ob"] = { "<cmd> bufdo bd <CR>", "close all buffers"},
+    ["<leader>ob"] = { "<cmd> bufdo bd <CR>", "close all buffers" },
 
     -- toggle transparency
     ["<leader>tt"] = {
@@ -65,10 +64,16 @@ M.general = {
     -- Copy all
     ["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" },
 
+    -- Select all
+    ["<leader>sa"] = { "ggVG", "Select all" },
+
+    -- Paste all
+    ["<leader>sv"] = { "ggVGpG", "Paste all" },
+
     -- line numbers
     ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
 
-    ["<F5>"] = { "<cmd> UndotreeToggle <CR>", "Toggle Undo Tree"},
+    ["<F5>"] = { "<cmd> UndotreeToggle <CR>", "Toggle Undo Tree" },
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
     -- empty mode is same as using <cmd> :map
@@ -91,16 +96,15 @@ M.general = {
 
     ["<leader>ot"] = { "<cmd> ObsidianTemplate <CR>", "Insert Obsidian Template" },
 
-    ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues"},
+    ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues" },
 
-      -- Add the keybinding for oil.nvim
+    -- Add the keybinding for oil.nvim
     ["-"] = { "<cmd>lua require('oil').open()<CR>", "Open oil.nvim" },
     -- Obsidian
-    ["<leader>os"] = { '<cmd>ObsidianTemplate safeguard template<CR>', "Insert safeguard template" },
-    ["<leader>oc"] = { '<cmd>ObsidianTemplate control template<CR>', "Insert control template" },
+    ["<leader>os"] = { "<cmd>ObsidianTemplate safeguard template<CR>", "Insert safeguard template" },
+    ["<leader>oc"] = { "<cmd>ObsidianTemplate control template<CR>", "Insert control template" },
 
     ["<leader>rn"] = { "<cmd> IncRename <CR>", "Rename live" },
-
 
     ["<leader>om"] = { "<cmd> RenderMarkdown toggle <CR>", "Render Markdown toggle" },
     ["<leader>oo"] = { "Gzzo", "Insert at bottom" },
@@ -115,9 +119,9 @@ M.general = {
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
-    ["<leader>sc"] = { '<cmd>lua require("nvim-silicon").clip()<CR>' , ' "Copy code screenshot to clipboard"' },
+    ["<leader>sc"] = { '<cmd>lua require("nvim-silicon").clip()<CR>', ' "Copy code screenshot to clipboard"' },
     -- create a markdown file of selected text
-    ["<leader>gf"] = { '<cmd>lua create_markdown_file()<CR>', "Create markdown file from selected text" },
+    ["<leader>gf"] = { "<cmd>lua create_markdown_file()<CR>", "Create markdown file from selected text" },
   },
 
   x = {

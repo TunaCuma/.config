@@ -32,7 +32,10 @@ font pango: BlexMono Nerd Font 8
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id xbindkeys
 exec --no-startup-id xset s off
+exec --no-startup-id xset -dpms
+exec --no-startup-id xset s noblank
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale ~/Pictures/bg.gif
 exec --no-startup-id picom
@@ -163,7 +166,7 @@ bindsym $mod+0 workspace number $ws10
 workspace $ws1 output $monitor_left
 workspace $ws2 output $monitor_right
 workspace $ws3 output $monitor_left
-workspace $ws4 output $monitor_left
+workspace $ws4 output $monitor_right
 workspace $ws5 output $monitor_left
 workspace $ws6 output $monitor_left
 workspace $ws7 output $monitor_left
@@ -185,6 +188,8 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 for_window [class="Vivaldi-stable"] move to workspace number $ws3
 for_window [class="obsidian"] move to workspace number $ws4
 for_window [class="Spotify"] move to workspace number $ws5
+for_window [class="feh"] move to workspace number $ws4
+for_window [class="Zathura"] move to workspace number $ws2
 
 # reload the configuration file
 bindsym $mod+Shift+c reload

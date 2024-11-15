@@ -54,18 +54,6 @@ local plugins = {
     lazy = true,
     ft = { "markdown" },
     cmd = "ZenMode",
-    dependencies = {
-      {
-        "folke/twilight.nvim",
-        cmd = "Twilight",
-        opts = {
-          treesitter = false,
-          dimming = {
-            alpha = 0.45,
-          },
-        },
-      },
-    },
     keys = {
       { "<leader>wt", "<cmd>Twilight<cr>", desc = "Toggle twilight" },
       { "<leader>wz", "<cmd>ZenMode<cr>",  desc = "Toggle zen mode " },
@@ -100,9 +88,38 @@ local plugins = {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    opts = {},
+    opts = {
+      heading = {
+        backgrounds = {
+          "RenderMarkdownH1Bg",
+          "RenderMarkdownH5Bg",
+          "RenderMarkdownH3Bg",
+          "RenderMarkdownH4Bg",
+          "RenderMarkdownH5Bg",
+          "RenderMarkdownH6Bg",
+        },
+        foregrounds = {
+          "RenderMarkdownH1",
+          "RenderMarkdownH5",
+          "RenderMarkdownH3",
+          "RenderMarkdownH4",
+          "RenderMarkdownH5",
+          "RenderMarkdownH6",
+        },
+      },
+      latex = {
+        enabled = true,
+        converter = "latex2text",
+        highlight = "RenderMarkdownMath",
+        top_pad = 0,
+        bottom_pad = 0,
+      },
+    },
     dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
     ft = { "markdown" },
+    keys = {
+      { "<leader>rm", "<cmd>RenderMarkdown toggle<cr>", desc = "Render markdown" },
+    },
   },
   {
     "epwalsh/obsidian.nvim",
@@ -138,6 +155,9 @@ local plugins = {
       },
 
       -- see below for full list of options 👇
+    },
+    keys = {
+      { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Paste Obsidian image" },
     },
   },
   -- {
@@ -185,12 +205,6 @@ local plugins = {
       {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        config = function()
-          require("nvim-treesitter.configs").setup {
-            ensure_installed = { "markdown" },
-            highlight = { enable = true },
-          }
-        end,
       },
     },
     opts = {
