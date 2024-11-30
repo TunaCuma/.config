@@ -11,11 +11,22 @@
 set $mod Mod1
 set $altMod Mod4
 
-bindsym $altMod+w exec --no-startup-id flatpak run com.ktechpit.whatsie
-bindsym $altMod+t exec --no-startup-id flatpak run org.telegram.desktop
-bindsym $altMod+b exec "zathura ~/personal/books/CIS_Controls__v8.1_Guide__2024_06.pdf"
-bindsym $altMod+s exec "zathura ~/personal/books/mccllelan-signal-processing-first-2003.pdf"
 bindsym $altMod+f exec "exec firefox"
+
+# Keybindings to open specific ports on Firefox
+bindsym $altMod+1 workspace 2; exec --no-startup-id firefox http://localhost:3000
+bindsym $altMod+2 workspace 2; exec --no-startup-id firefox http://localhost:5174  # Next port after 5173
+bindsym $altMod+3 workspace 2; exec --no-startup-id firefox http://localhost:1338  # Next port after 1337
+bindsym $altMod+4 workspace 2; exec --no-startup-id firefox http://localhost:5001  # Next port after 5000
+
+# Open specific URLs with de2ignated keys
+bindsym $altMod+c workspace 2; exec --no-startup-id firefox https://chat.openai.com
+bindsym $altMod+v workspace 2; exec --no-startup-id firefox https://v0.dev/chat/wnDXuwnHRxL
+bindsym $altMod+m workspace 2; exec --no-startup-id firefox https://moodle.bilkent.edu.tr/2024-2025-fall/login/index.php
+bindsym $altMod+s workspace 2; exec --no-startup-id firefox https://stars.bilkent.edu.tr/srs/
+bindsym $altMod+w workspace 2; exec --no-startup-id firefox https://webmail.bilkent.edu.tr/
+bindsym $altMod+t workspace 2; exec --no-startup-id firefox https://translate.google.com/
+bindsym $altMod+g workspace 2; exec --no-startup-id firefox https://meet.google.com/landing
 
 bindsym $mod+Tab workspace back_and_forth
 
@@ -190,6 +201,8 @@ for_window [class="obsidian"] move to workspace number $ws4
 for_window [class="Spotify"] move to workspace number $ws5
 for_window [class="feh"] move to workspace number $ws4
 for_window [class="Zathura"] move to workspace number $ws2
+for_window [class="Minecraft Launcher"] move to workspace number $ws6
+for_window [class="Minecraft* 1.21.3"] move to workspace number $ws6
 
 # reload the configuration file
 bindsym $mod+Shift+c reload

@@ -20,6 +20,10 @@ i3-msg "workspace 3; exec vivaldi"
 # Start kitty in workspace 1
 i3-msg "workspace 1; exec kitty -e ~/.local/bin/tmux-sessionizer ~/"
 
-i3-msg "workspace 6; exec tmux new-session -ds timer_session 'python3 ~/personal/python/pomodoro/main.py'"
+# i3-msg "workspace 6; exec tmux new-session -ds timer_session 'python3 ~/personal/python/pomodoro/main.py'"
 
 i3-msg "workspace 1"
+
+sleep 2
+
+tmux send-keys -t "tuna" "remind -c -m -w1,2,1 ~/.local/bin/assets/remind_birthdays.rem; birthday_cow" Enter
