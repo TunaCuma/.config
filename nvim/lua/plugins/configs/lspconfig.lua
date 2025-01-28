@@ -11,6 +11,11 @@ M.on_attach = function(client, bufnr)
   if client.server_capabilities.signatureHelpProvider then
     require("nvchad.signature").setup(client)
   end
+
+  if client.name == "volar" then
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+  end
 end
 
 -- disable semantic tokens
