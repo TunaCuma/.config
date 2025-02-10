@@ -433,7 +433,7 @@ local plugins = {
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
-    lazy = false,
+    lazy = true,
     config = function()
       require("copilot").setup {
         panel = {

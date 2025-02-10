@@ -1,13 +1,8 @@
 #!/bin/bash
 
 # Start Spotify in workspace 5
-i3-msg "workspace 5"
-flatpak run com.spotify.Client &
-
-# Modified workspace 4 setup - separate the commands
-i3-msg "workspace 4"
-feh --scale-down ~/Pictures/output.png &
-gnumeric ~/bilkent/Courses_Assessment.xlsx &
+# i3-msg "workspace 5"
+# flatpak run com.spotify.Client &
 
 # Start Firefox in workspace 2
 i3-msg "workspace 2"

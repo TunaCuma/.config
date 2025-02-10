@@ -16,6 +16,15 @@ if not vim.loop.fs_stat(lazypath) then
   require("core.bootstrap").lazy(lazypath)
 end
 
+-- Auto-disable Copilot for leetcode files
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*/.leetcode/code/*" }, -- matches the leetcode-cli code directory
+  callback = function()
+    vim.cmd "Copilot disable"
+    print "Copilot disabled for LeetCode"
+  end,
+})
+
 -- Remap <C-u> to perform the default action and then center the cursor
 vim.api.nvim_set_keymap("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true })
 

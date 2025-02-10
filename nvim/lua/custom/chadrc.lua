@@ -4,7 +4,7 @@
 
 local M = {}
 
-M.ui = { theme = "onedark" }
+M.ui = { theme = "chadracula" }
 M.plugins = "custom.plugins"
 
 return M

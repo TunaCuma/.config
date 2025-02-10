@@ -13,6 +13,8 @@ set $altMod Mod4
 
 exec --no-startup-id /usr/libexec/gsd-xsettings
 
+exec --no-startup-id numlockx on
+
 bindsym $altMod+f exec "exec firefox"
 
 # Keybindings to open specific ports on Firefox
@@ -22,18 +24,17 @@ bindsym $altMod+3 workspace 2; exec --no-startup-id firefox http://localhost:517
 bindsym $altMod+4 workspace 2; exec --no-startup-id firefox http://localhost:5000
 
 # Open specific URLs with de2ignated keys
-bindsym $altMod+c workspace 2; exec --no-startup-id firefox https://chat.openai.com
-bindsym $altMod+a workspace 2; exec --no-startup-id firefox https://claude.ai/new
-bindsym $altMod+v workspace 2; exec --no-startup-id firefox https://v0.dev/chat
-bindsym $altMod+i workspace 2; exec --no-startup-id firefox https://console.firebase.google.com/project/codeway-panel-6f131/overview
-bindsym $altMod+m workspace 2; exec --no-startup-id firefox https://moodle.bilkent.edu.tr/2024-2025-fall/login/index.php
+bindsym $altMod+k workspace 2; exec --no-startup-id firefox https://chat.openai.com
+bindsym $altMod+l workspace 2; exec --no-startup-id firefox https://chat.deepseek.com/
+bindsym $altMod+j workspace 2; exec --no-startup-id firefox https://claude.ai/new
+bindsym $altMod+m workspace 2; exec --no-startup-id firefox https://moodle.bilkent.edu.tr/2024-2025-spring/my/
 bindsym $altMod+s workspace 2; exec --no-startup-id firefox https://stars.bilkent.edu.tr/srs/
-bindsym $altMod+w workspace 2; exec --no-startup-id firefox https://webmail.bilkent.edu.tr/
-bindsym $altMod+t workspace 2; exec --no-startup-id firefox https://translate.google.com/
+bindsym $altMod+b workspace 2; exec --no-startup-id firefox https://webmail.bilkent.edu.tr/
 bindsym $altMod+g workspace 2; exec --no-startup-id firefox https://meet.google.com/landing
 bindsym $altMod+d workspace 2; exec --no-startup-id firefox https://local.drizzle.studio
 
-
+bindsym $mod+b exec "rofi -show bookmark"
+bindsym $mod+t exec "rofi -show translate"
 bindsym $mod+Tab workspace back_and_forth
 
 bindsym $mod+Shift+h exec --no-startup-id xrandr --output HDMI-1 --auto --right-of eDP-1
@@ -57,7 +58,10 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale ~/Pictures/bg.gif
 exec --no-startup-id picom
 exec --no-startup-id i3-battery-popup/i3-battery-popup -n -D -L 20 -l 10
-exec --no-startup-id sh -c "setxkbmap -layout us,tr && setxkbmap -option -option caps:ctrl_modifier && setxkbmap -option 'grp:win_space_toggle'"
+# Keyboard layout configuration
+exec_always --no-startup-id "setxkbmap -layout us,tr -option caps:ctrl_modifier,grp:win_space_toggle"
+
+bindsym $mod+Shift+d exec --no-startup-id ~/.local/bin/hq rofi
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
