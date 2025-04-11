@@ -86,6 +86,39 @@ local plugins = {
     },
   },
   {
+    "3rd/diagram.nvim",
+    ft = { "markdown" },
+    dependencies = {
+      "3rd/image.nvim",
+    },
+    opts = { -- you can just pass {}, defaults below
+      renderer_options = {
+        mermaid = {
+          background = "transparent", -- nil | "transparent" | "white" | "#hex"
+          theme = "dark",             -- nil | "default" | "dark" | "forest" | "neutral"
+          scale = 2,                  -- nil | 1 (default) | 2  | 3 | ...
+          width = nil,                -- nil | 800 | 400 | ...
+          height = nil,               -- nil | 600 | 300 | ...
+        },
+        plantuml = {
+          charset = nil,
+        },
+        d2 = {
+          theme_id = nil,
+          dark_theme_id = nil,
+          scale = nil,
+          layout = nil,
+          sketch = nil,
+        },
+        gnuplot = {
+          size = nil,  -- nil | "800,600" | ...
+          font = nil,  -- nil | "Arial,12" | ...
+          theme = nil, -- nil | "light" | "dark" | custom theme string
+        },
+      },
+    },
+  },
+  {
     "mg979/vim-visual-multi",
     branch = "master",
     lazy = false,
@@ -421,6 +454,20 @@ local plugins = {
   {
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPost",
+    opts = {
+      enable = true,
+      multiwindow = false,
+      max_lines = 3, -- Show only 1 line of context
+      min_window_height = 0,
+      line_numbers = true,
+      multiline_threshold = 5, -- Truncate large parameter lists
+      trim_scope = "inner", -- Trim the inner parts (parameters) first
+      separator = "─", -- Visual separator for clarity
+      zindex = 20,
+    },
+    config = function(_, opts)
+      require("treesitter-context").setup(opts)
+    end,
   },
   {
     "mbbill/undotree",
@@ -471,30 +518,88 @@ local plugins = {
   {
     "stevearc/oil.nvim",
     opts = {},
-    -- Optional dependencies
     dependencies = { { "echasnovski/mini.icons", opts = {} } },
-    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
     config = function()
       require("oil").setup {
         skip_confirm_for_simple_edits = true,
         lsp_file_methods = {
-          -- Time to wait for LSP file operations to complete before skipping
           timeout_ms = 500000,
-          -- Set to true to autosave buffers that are updated with LSP willRenameFiles
-          -- Set to "unmodified" to only save unmodified buffers
           autosave_changes = "unmodified",
         },
         view_options = {
-          -- Show files and directories that start with "."
           show_hidden = true,
-          -- This function defines what is considered a "hidden" file
           is_hidden_file = function(name, bufnr)
             return vim.startswith(name, ".")
           end,
-          -- This function defines what will never be shown, even when `show_hidden` is set
           is_always_hidden = function(name, bufnr)
             return (name == "..")
           end,
+        },
+        -- Add custom keymaps
+        keymaps = {
+          -- Override the default <CR> action with our custom handler
+          ["<CR>"] = {
+            callback = function()
+              local entry = require("oil").get_cursor_entry()
+              if entry then
+                local dir = require("oil").get_current_dir()
+                local path = dir .. entry.name
+
+                -- If it's a PDF file, open with Zathura
+                if path:match "%.pdf$" then
+                  vim.fn.jobstart({ "zathura", path }, { detach = true })
+                  vim.notify("Opening " .. path .. " with Zathura", vim.log.levels.INFO)
+                  return
+                end
+              end
+
+              -- For all other files, use the default behavior
+              require("oil.actions").select.callback()
+            end,
+            desc = "Open file or directory (PDF with Zathura)",
+            mode = "n",
+          },
+
+          -- Add custom keymap for copying project-relative path
+          ["gp"] = {
+            callback = function()
+              local entry = require("oil").get_cursor_entry()
+              if entry then
+                local dir = require("oil").get_current_dir()
+                local abs_path = dir .. entry.name
+
+                -- Find git root directory
+                local git_root = ""
+                local current = dir
+                while current ~= "/" do
+                  local git_dir = current .. ".git"
+                  local stat = vim.loop.fs_stat(git_dir)
+                  if stat and (stat.type == "directory" or stat.type == "file") then
+                    git_root = current
+                    break
+                  end
+                  -- Go up one directory
+                  current = vim.fn.fnamemodify(current:sub(1, -2), ":h") .. "/"
+                end
+
+                local rel_path
+                if git_root ~= "" then
+                  -- Get path relative to git root
+                  rel_path = abs_path:sub(#git_root + 1)
+                  vim.fn.setreg("+", rel_path)
+                  vim.fn.setreg('"', rel_path)
+                  vim.notify("Copied project-relative path: " .. rel_path, vim.log.levels.INFO)
+                else
+                  -- No git root found, copy absolute path instead
+                  vim.fn.setreg("+", abs_path)
+                  vim.fn.setreg('"', abs_path)
+                  vim.notify("No git root found. Copied absolute path: " .. abs_path, vim.log.levels.INFO)
+                end
+              end
+            end,
+            desc = "Copy project-relative file path",
+            mode = "n",
+          },
         },
       }
     end,

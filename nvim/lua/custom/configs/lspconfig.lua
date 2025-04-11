@@ -46,6 +46,53 @@ if not lspconfig.emmet_language_server then
   }
 end
 
+-- Setup Jedi Language Server for Python
+lspconfig.jedi_language_server.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  -- Optional settings based on the documentation
+  settings = {
+    jedi = {
+      jediSettings = {
+        autoImportModules = {},
+        caseInsensitiveCompletion = true,
+        debug = false,
+      },
+      completion = {
+        disableSnippets = false,
+        resolveEagerly = false,
+        ignorePatterns = {},
+      },
+      diagnostics = {
+        enable = true,
+        didOpen = true,
+        didChange = true,
+        didSave = true,
+      },
+      hover = {
+        enable = true,
+      },
+      workspace = {
+        extraPaths = {},
+        symbols = {
+          ignoreFolders = { ".nox", ".tox", ".venv", "__pycache__", "venv" },
+          maxSymbols = 20,
+        },
+      },
+    },
+  },
+}
+
+lspconfig.phpactor.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "php" },
+  init_options = {
+    ["language_server_phpstan.enabled"] = false,
+    ["language_server_psalm.enabled"] = false,
+  },
+}
+
 -- Setup emmet_language_server
 lspconfig.emmet_language_server.setup {
   on_attach = on_attach,
@@ -60,44 +107,44 @@ lspconfig.emmet_language_server.setup {
   },
 }
 
-lspconfig.volar.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
-  init_options = {
-    typescript = {
-      tsdk = "/home/tuna/.nvm/versions/node/v20.15.0/lib/node_modules/typescript/lib",
-    },
-  },
-  settings = {
-    vue = {
-      format = {
-        enable = false,
-      },
-      htmlFormatEnable = false,
-    },
-    typescript = {
-      format = {
-        enable = false,
-      },
-    },
-    javascript = {
-      format = {
-        enable = false,
-      },
-    },
-    ["vue-semantic-server"] = {
-      format = {
-        enable = false,
-      },
-    },
-    ["vue-language-server"] = {
-      format = {
-        enable = false,
-      },
-    },
-  },
-}
+-- lspconfig.volar.setup {
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
+--   init_options = {
+--     typescript = {
+--       tsdk = "/home/tuna/.nvm/versions/node/v20.15.0/lib/node_modules/typescript/lib",
+--     },
+--   },
+--   settings = {
+--     vue = {
+--       format = {
+--         enable = false,
+--       },
+--       htmlFormatEnable = false,
+--     },
+--     typescript = {
+--       format = {
+--         enable = false,
+--       },
+--     },
+--     javascript = {
+--       format = {
+--         enable = false,
+--       },
+--     },
+--     ["vue-semantic-server"] = {
+--       format = {
+--         enable = false,
+--       },
+--     },
+--     ["vue-language-server"] = {
+--       format = {
+--         enable = false,
+--       },
+--     },
+--   },
+-- }
 
 lspconfig.ts_ls.setup {
   init_options = {
@@ -120,11 +167,13 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
 lspconfig.cssls.setup {
   cmd = { "/home/tuna/.nvm/versions/node/v20.15.0/bin/vscode-css-language-server", "--stdio" },
   on_attach = on_attach,
   capabilities = capabilities,
 }
+
 -- Setup Lua language server
 lspconfig.lua_ls.setup {
   on_attach = on_attach,

@@ -20,8 +20,9 @@ bindsym $altMod+f exec "exec firefox"
 # Keybindings to open specific ports on Firefox
 bindsym $altMod+1 workspace 2; exec --no-startup-id firefox http://localhost:3000
 bindsym $altMod+2 workspace 2; exec --no-startup-id firefox http://localhost:4000
-bindsym $altMod+3 workspace 2; exec --no-startup-id firefox http://localhost:5173
+bindsym $altMod+3 workspace 2; exec --no-startup-id firefox http://localhost:1337
 bindsym $altMod+4 workspace 2; exec --no-startup-id firefox http://localhost:5000
+bindsym $altMod+5 workspace 2; exec --no-startup-id firefox http://localhost:5173
 
 # Open specific URLs with de2ignated keys
 bindsym $altMod+k workspace 2; exec --no-startup-id firefox https://chat.openai.com
@@ -35,11 +36,18 @@ bindsym $altMod+d workspace 2; exec --no-startup-id firefox https://local.drizzl
 
 bindsym $mod+b exec "rofi -show bookmark"
 bindsym $mod+t exec "rofi -show translate"
+bindsym $mod+o exec --no-startup-id "/home/tuna/.local/bin/emoji-picker"
+bindsym $mod+y exec --no-startup-id "/home/tuna/.local/bin/youtube_search.sh"
+
 bindsym $mod+Tab workspace back_and_forth
 
 bindsym $mod+Shift+h exec --no-startup-id xrandr --output HDMI-1 --auto --right-of eDP-1
 bindsym $mod+Shift+y exec --no-startup-id xrandr --output HDMI-1 --off
 
+bindsym $mod+Shift+p exec --no-startup-id ~/scripts/connect_buds.sh
+bindsym $mod+Shift+o exec --no-startup-id ~/scripts/disconnect_buds.sh
+
+bindsym $altMod+i workspace 4; exec --no-startup-id "gimp ~/Documents/default.xcf"
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango: BlexMono Nerd Font 8
@@ -208,6 +216,8 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # assign workspace for windows
 for_window [class="Zathura"] move to workspace number $ws2
 for_window [class="Vivaldi-stable"] move to workspace number $ws3
+for_window [class="electron-react-boilerplate"] move to workspace number $ws5
+for_window [class="main.py"] move to workspace number $ws5
 for_window [class="obsidian"] move to workspace number $ws4
 for_window [class="Gnumeric"] move to workspace number $ws4
 for_window [class="feh"] move to workspace number $ws4

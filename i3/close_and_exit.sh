@@ -1,11 +1,8 @@
 #!/bin/bash
-
 # Define options
-options="Exit i3\nPower Off\nReboot"
-
+options="Power Off\nReboot\nExit i3"
 # Show menu and get user choice
 chosen=$(echo -e "$options" | rofi -dmenu -i -p "Power Menu")
-
 case "$chosen" in
     "Power Off")
         i3-msg '[class=".*"] kill'
