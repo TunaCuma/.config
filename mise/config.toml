@@ -1,0 +1,6 @@
+[settings]
+experimental = true
+idiomatic_version_file_enable_tools = ["node", "python", "ruby", "yarn"]
+
+[tools]
+java = "temurin-17"
