@@ -2,6 +2,9 @@
 local M = {}
 
 function M.setup()
+  if vim.bo.filetype ~= "java" then
+    return
+  end
   local utils = require "custom.configs.lsp.utils"
   local lspconfig = require "lspconfig"
   local capabilities = utils.capabilities

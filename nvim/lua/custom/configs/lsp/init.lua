@@ -13,6 +13,7 @@ function M.setup()
   require("custom.configs.lsp.cpp").setup()
   require("custom.configs.lsp.csharp").setup() -- Added OmniSharp for C#
   require("custom.configs.lsp.java").setup()   -- Added jdtls for Java
+  require("custom.configs.lsp.kotlin").setup()
   -- Any additional setup that needs to happen after all LSPs are configured
 end
 
