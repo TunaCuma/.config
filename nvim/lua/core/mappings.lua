@@ -59,16 +59,16 @@ M.general = {
       "Toggle transparency",
     },
     -- save
-    ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
+    ["<C-s>"] = { "<cmd> w <CR>", "Save file" }, -- This
 
     -- Copy all
-    ["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" },
+    ["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" }, -- This
 
     -- Select all
     ["<leader>sa"] = { "ggVG", "Select all" },
 
     -- Paste all
-    ["<leader>sv"] = { "ggVGpG", "Paste all" },
+    ["<leader>sv"] = { "ggVGpG", "Paste all" }, -- This
 
     -- line numbers
     ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
@@ -87,7 +87,7 @@ M.general = {
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
 
-    ["<leader>fm"] = {
+    ["<leader>fm"] = { -- This
       function()
         vim.lsp.buf.format { async = true }
       end,
@@ -96,7 +96,7 @@ M.general = {
 
     ["<leader>ot"] = { "<cmd> ObsidianTemplate <CR>", "Insert Obsidian Template" },
 
-    ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues" },
+    ["<leader>tf"] = { "<cmd>lua require('core.utils').TypeScriptFixAll()<CR>", "Fix TypeScript Issues" }, -- This
 
     -- Add the keybinding for oil.nvim
     ["-"] = { "<cmd>lua require('oil').open()<CR>", "Open oil.nvim" },
@@ -104,7 +104,7 @@ M.general = {
     ["<leader>os"] = { "<cmd>ObsidianTemplate safeguard template<CR>", "Insert safeguard template" },
     ["<leader>oc"] = { "<cmd>ObsidianTemplate control template<CR>", "Insert control template" },
 
-    ["<leader>rn"] = { "<cmd> IncRename <CR>", "Rename live" },
+    ["<leader>rn"] = { "<cmd> IncRename <CR>", "Rename live" }, -- This
 
     ["<leader>om"] = { "<cmd> RenderMarkdown toggle <CR>", "Render Markdown toggle" },
     ["<leader>oo"] = { "Gzzo", "Insert at bottom" },
@@ -167,7 +167,7 @@ M.comment = {
 
   -- toggle comment in both modes
   n = {
-    ["<leader>/"] = {
+    ["<leader>/"] = { -- This
       function()
         require("Comment.api").toggle.linewise.current()
       end,
@@ -176,7 +176,7 @@ M.comment = {
   },
 
   v = {
-    ["<leader>/"] = {
+    ["<leader>/"] = { -- This
       "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
       "Toggle comment",
     },
@@ -331,7 +331,7 @@ M.telescope = {
     -- find
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
-    ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
+    ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" }, -- This
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },

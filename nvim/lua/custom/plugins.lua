@@ -85,39 +85,39 @@ local plugins = {
       },
     },
   },
-  {
-    "3rd/diagram.nvim",
-    ft = { "markdown" },
-    dependencies = {
-      "3rd/image.nvim",
-    },
-    opts = { -- you can just pass {}, defaults below
-      renderer_options = {
-        mermaid = {
-          background = "transparent", -- nil | "transparent" | "white" | "#hex"
-          theme = "dark",             -- nil | "default" | "dark" | "forest" | "neutral"
-          scale = 2,                  -- nil | 1 (default) | 2  | 3 | ...
-          width = nil,                -- nil | 800 | 400 | ...
-          height = nil,               -- nil | 600 | 300 | ...
-        },
-        plantuml = {
-          charset = nil,
-        },
-        d2 = {
-          theme_id = nil,
-          dark_theme_id = nil,
-          scale = nil,
-          layout = nil,
-          sketch = nil,
-        },
-        gnuplot = {
-          size = nil,  -- nil | "800,600" | ...
-          font = nil,  -- nil | "Arial,12" | ...
-          theme = nil, -- nil | "light" | "dark" | custom theme string
-        },
-      },
-    },
-  },
+  -- {
+  --   "3rd/diagram.nvim",
+  --   ft = { "markdown" },
+  --   dependencies = {
+  --     "3rd/image.nvim",
+  --   },
+  --   opts = { -- you can just pass {}, defaults below
+  --     renderer_options = {
+  --       mermaid = {
+  --         background = "transparent", -- nil | "transparent" | "white" | "#hex"
+  --         theme = "dark",             -- nil | "default" | "dark" | "forest" | "neutral"
+  --         scale = 2,                  -- nil | 1 (default) | 2  | 3 | ...
+  --         width = nil,                -- nil | 800 | 400 | ...
+  --         height = nil,               -- nil | 600 | 300 | ...
+  --       },
+  --       plantuml = {
+  --         charset = nil,
+  --       },
+  --       d2 = {
+  --         theme_id = nil,
+  --         dark_theme_id = nil,
+  --         scale = nil,
+  --         layout = nil,
+  --         sketch = nil,
+  --       },
+  --       gnuplot = {
+  --         size = nil,  -- nil | "800,600" | ...
+  --         font = nil,  -- nil | "Arial,12" | ...
+  --         theme = nil, -- nil | "light" | "dark" | custom theme string
+  --       },
+  --     },
+  --   },
+  -- },
   {
     "mg979/vim-visual-multi",
     branch = "master",
@@ -343,50 +343,50 @@ local plugins = {
       rocks = { "magick" },
     },
   },
-  {
-    "3rd/image.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-      },
-    },
-    opts = {
-      backend = "kitty",
-      integrations = {
-        markdown = {
-          enabled = true,
-          resolve_image_path = function(document_path, image_path, fallback)
-            -- Define the base path of your vault
-            local vault_base_path = "~/Desktop/obsidian-vault"
-
-            -- Concatenate the vault base path with the image_path
-            local adjusted_path = vault_base_path .. "/" .. image_path
-
-            -- Return the adjusted absolute path
-            return adjusted_path
-          end,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = true,
-          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-        },
-        neorg = {
-          enabled = true,
-          clear_in_insert_mode = true,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "norg" },
-        },
-      },
-      max_width = nil,
-      max_height = nil,
-      max_width_window_percentage = nil,
-      max_height_window_percentage = 50,
-      kitty_method = "normal",
-    },
-  },
+  -- {
+  --   "3rd/image.nvim",
+  --   event = "VeryLazy",
+  --   dependencies = {
+  --     {
+  --       "nvim-treesitter/nvim-treesitter",
+  --       build = ":TSUpdate",
+  --     },
+  --   },
+  --   opts = {
+  --     backend = "kitty",
+  --     integrations = {
+  --       markdown = {
+  --         enabled = true,
+  --         resolve_image_path = function(document_path, image_path, fallback)
+  --           -- Define the base path of your vault
+  --           local vault_base_path = "~/Desktop/obsidian-vault"
+  --
+  --           -- Concatenate the vault base path with the image_path
+  --           local adjusted_path = vault_base_path .. "/" .. image_path
+  --
+  --           -- Return the adjusted absolute path
+  --           return adjusted_path
+  --         end,
+  --         clear_in_insert_mode = false,
+  --         download_remote_images = true,
+  --         only_render_image_at_cursor = true,
+  --         filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+  --       },
+  --       neorg = {
+  --         enabled = true,
+  --         clear_in_insert_mode = true,
+  --         download_remote_images = true,
+  --         only_render_image_at_cursor = false,
+  --         filetypes = { "norg" },
+  --       },
+  --     },
+  --     max_width = nil,
+  --     max_height = nil,
+  --     max_width_window_percentage = nil,
+  --     max_height_window_percentage = 50,
+  --     kitty_method = "normal",
+  --   },
+  -- },
   {
     "theprimeagen/harpoon",
     branch = "harpoon2",
