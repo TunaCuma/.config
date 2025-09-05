@@ -115,6 +115,10 @@ if.app-id = 'com.postmanlabs.mac'
 run = 'move-node-to-workspace 7'
 
 [[on-window-detected]]
+if.app-id = 'org.gimp.gimp-2.10'
+run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92'
 run = 'move-node-to-workspace 8'
 
@@ -125,3 +129,5 @@ run = 'move-node-to-workspace 9'
 [workspace-to-monitor-force-assignment]
     2 = 'secondary'                  
     4 = 'secondary'                  
+    7 = 'secondary'                  
+
