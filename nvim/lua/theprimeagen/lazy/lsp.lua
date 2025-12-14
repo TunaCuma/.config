@@ -149,7 +149,7 @@ return {
 									diagnosticMode = "openFilesOnly", -- Only check open files for better performance
 									useLibraryCodeForTypes = true,
 									typeCheckingMode = "basic", -- Change to "all" if you want stricter checking
-									-- Disable some noisy diagnostics
+									-- Disable noisy diagnostics, especially for Django
 									diagnosticSeverityOverrides = {
 										reportAny = false,
 										reportMissingTypeArgument = false,
@@ -159,6 +159,23 @@ return {
 										reportUnknownParameterType = false,
 										reportUnknownVariableType = false,
 										reportUnusedCallResult = false,
+										reportAttributeAccessIssue = false,
+										reportCallIssue = false,
+										reportArgumentType = false,
+										reportAssignmentType = false,
+										reportGeneralTypeIssues = false,
+										reportOptionalSubscript = false,
+										reportOptionalMemberAccess = false,
+										reportOptionalCall = false,
+										reportOptionalIterable = false,
+										reportOptionalContextManager = false,
+										reportOptionalOperand = false,
+										reportIncompatibleMethodOverride = false,
+										reportIncompatibleVariableOverride = false,
+										reportUntypedFunctionDecorator = false,
+										reportUntypedClassDecorator = false,
+										reportUntypedBaseClass = false,
+										reportUntypedNamedTuple = false,
 									},
 								},
 							},
@@ -173,14 +190,15 @@ return {
 					})
 				end,
 
-				["ruff"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.ruff.setup({
-						capabilities = capabilities,
-					})
-				end,
-			},
-		})
+			["ruff"] = function()
+				local lspconfig = require("lspconfig")
+				lspconfig.ruff.setup({
+					capabilities = capabilities,
+				})
+			end,
+
+		},
+	})
 
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -203,10 +221,6 @@ return {
 				if buftype == "prompt" then
 					return false
 				end
-				local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-				if filetype == "markdown" then
-					return false
-				end
 				return true
 			end,
 			sources = cmp.config.sources({
@@ -215,6 +229,15 @@ return {
 				{ name = "luasnip" }, -- For luasnip users.
 			}, {
 				{ name = "buffer" },
+			}),
+		})
+
+		-- Configure sources specifically for markdown files (no buffer suggestions)
+		cmp.setup.filetype("markdown", {
+			sources = cmp.config.sources({
+				{ name = "copilot", group_index = 2 },
+				{ name = "luasnip" }, -- For luasnip users (your snippets)
+				{ name = "path" }, -- File path completion
 			}),
 		})
 
