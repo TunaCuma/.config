@@ -1,0 +1,7 @@
+# Sourced after uc blocks in ~/.zshrc (see bin/uc-shell-integrate).
+# Maps uc artifactory credentials to uv index auth env vars.
+
+if [[ -n "${ART_USERNAME:-}" && -n "${ART_API_KEY:-}" ]]; then
+  export UV_INDEX_UDEMY_PYPI_USERNAME="$ART_USERNAME"
+  export UV_INDEX_UDEMY_PYPI_PASSWORD="$ART_API_KEY"
+fi

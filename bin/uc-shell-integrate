@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ensures uc-managed shell files in ~ source dotfiles from this repo.
+# uc setup only mutates content inside UCBLOCK markers; lines outside are preserved.
+
+DOTFILES_MARKER_START='# >>> dotfiles personal config >>>'
+DOTFILES_MARKER_END='# <<< dotfiles personal config <<<'
+DOTFILES_SOURCE='[[ -f "$HOME/.zshrc.personal" ]] && source "$HOME/.zshrc.personal"'
+
+POST_UC_MARKER_START='# >>> dotfiles post-uc >>>'
+POST_UC_MARKER_END='# <<< dotfiles post-uc >>>'
+POST_UC_SOURCE='[[ -f "$HOME/.zshrc.post-uc" ]] && source "$HOME/.zshrc.post-uc"'
+
+ZSHRC="$HOME/.zshrc"
+BACKUP_DIR="${1:-$HOME/.config/.dotfiles-backup}"
+
+die() {
+  echo "error: $*" >&2
+  exit 1
+}
+
+ensure_real_file() {
+  local path="$1"
+  if [[ -L "$path" ]]; then
+    die "$path is a symlink (likely from stow). Restore a real file for uc compatibility."
+  fi
+}
+
+insert_dotfiles_source() {
+  local file="$1"
+  if grep -qF "$DOTFILES_MARKER_START" "$file" 2>/dev/null; then
+    echo "  $file already sources dotfiles personal config"
+    return
+  fi
+
+  local tmp
+  tmp="$(mktemp)"
+  {
+    echo "$DOTFILES_MARKER_START"
+    echo "$DOTFILES_SOURCE"
+    echo "$DOTFILES_MARKER_END"
+    echo
+    cat "$file"
+  } >"$tmp"
+  mv "$tmp" "$file"
+  echo "  Added dotfiles source marker to $file"
+}
+
+insert_dotfiles_post_uc() {
+  local file="$1"
+  if grep -qF "$POST_UC_MARKER_START" "$file" 2>/dev/null; then
+    echo "  $file already sources dotfiles post-uc config"
+    return
+  fi
+
+  {
+    echo
+    echo "$POST_UC_MARKER_START"
+    echo "$POST_UC_SOURCE"
+    echo "$POST_UC_MARKER_END"
+  } >>"$file"
+  echo "  Added dotfiles post-uc marker to $file"
+}
+
+strip_personal_from_zshrc() {
+  local file="$1"
+  if ! grep -qE '^# \*{10}UCBLOCKSTART:' "$file"; then
+    return
+  fi
+  if grep -qF "$DOTFILES_MARKER_START" "$file" && ! grep -q 'oh-my-zsh' "$file"; then
+    echo "  $file already looks uc-only (no duplicate personal config)"
+    return
+  fi
+
+  local tmp
+  tmp="$(mktemp)"
+  awk -v start="$DOTFILES_MARKER_START" -v end="$DOTFILES_MARKER_END" \
+      -v post_start="$POST_UC_MARKER_START" -v post_end="$POST_UC_MARKER_END" '
+    BEGIN { in_dotfiles=0; in_uc=0; in_rancher=0; in_post=0 }
+    $0 == start { in_dotfiles=1 }
+    in_dotfiles { print; if ($0 == end) in_dotfiles=0; next }
+    $0 == post_start { in_post=1 }
+    in_post { print; if ($0 == post_end) in_post=0; next }
+    /^# \*{10}UCBLOCKSTART:/ { in_uc=1 }
+    in_uc { print; if (/^# \*{9}UCBLOCKEND:/) in_uc=0; next }
+    /^### MANAGED BY RANCHER DESKTOP START/ { in_rancher=1 }
+    in_rancher { print; if (/^### MANAGED BY RANCHER DESKTOP END/) in_rancher=0; next }
+    { next }
+  ' "$file" >"$tmp"
+
+  if [[ ! -s "$tmp" ]]; then
+    rm "$tmp"
+    echo "  Skipped stripping $file (would become empty)"
+    return
+  fi
+
+  mv "$tmp" "$file"
+  echo "  Stripped duplicate personal config from $file (uc blocks only)"
+}
+
+restore_uc_shell_files() {
+  local name src
+  for name in .zshrc .zprofile .bashrc; do
+    src="$BACKUP_DIR/$name"
+    if [[ -L "$HOME/$name" ]]; then
+      rm "$HOME/$name"
+      echo "  Removed symlink $HOME/$name"
+    fi
+    if [[ ! -f "$HOME/$name" && -f "$src" ]]; then
+      cp -a "$src" "$HOME/$name"
+      echo "  Restored $HOME/$name from backup"
+    fi
+  done
+}
+
+main() {
+  echo "Integrating dotfiles with uc-managed shell files..."
+
+  restore_uc_shell_files
+  ensure_real_file "$ZSHRC"
+
+  if [[ ! -f "$ZSHRC" ]]; then
+    die "$ZSHRC not found. Run uc setup first, or restore from $BACKUP_DIR"
+  fi
+
+  insert_dotfiles_source "$ZSHRC"
+  strip_personal_from_zshrc "$ZSHRC"
+  insert_dotfiles_post_uc "$ZSHRC"
+
+  echo
+  echo "Done. uc setup will continue to update UCBLOCK sections in:"
+  echo "  ~/.zshrc   (secrets stay here, not in git)"
+  echo "  ~/.zprofile"
+  echo "  ~/.bashrc"
+  echo
+  echo "Personal zsh config: ~/.config/home/.zshrc.personal"
+  echo "Post-uc hooks (e.g. uv auth): ~/.config/home/.zshrc.post-uc"
+}
+
+main "$@"

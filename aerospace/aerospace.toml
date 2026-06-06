@@ -129,5 +129,5 @@ run = 'move-node-to-workspace 9'
 [workspace-to-monitor-force-assignment]
     2 = 'secondary'                  
     4 = 'secondary'                  
-    7 = 'secondary'                  
+    8 = 'secondary'                  
 

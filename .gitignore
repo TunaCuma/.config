@@ -1,0 +1,31 @@
+# uc-managed shell files must stay as real files in ~ (not stowed, not committed).
+# They are listed here as documentation — git only ignores paths inside this repo.
+# home/.zshrc
+# home/.zprofile
+# home/.bashrc
+
+.env
+.env.*
+
+# Secret-bearing config not managed by stow
+uv/uv.toml
+.npmrc
+.pypirc
+.env-mcp
+.databrickscfg
+.okta_aws_login_config
+
+# Dependencies and caches
+opencode/node_modules/
+**/node_modules/
+
+# Install backups (created by bin/dotfiles-install)
+.dotfiles-backup/
+
+# Accidental / generated files
+server exited unexpectedly
+.zcompdump*
+*.zwc
+
+# macOS
+.DS_Store

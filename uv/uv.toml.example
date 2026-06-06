@@ -1,0 +1,10 @@
+# Copy to uv/uv.toml (gitignored). Credentials come from shell env vars
+# set in ~/.zshrc.post-uc from uc's ART_* exports.
+#
+#   cp uv/uv.toml.example uv/uv.toml
+
+index-strategy = "unsafe-best-match"
+
+[[index]]
+name = "udemy-pypi"
+url = "https://pkg.udemy.dev/artifactory/api/pypi/udemy-pypi/simple/"

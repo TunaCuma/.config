@@ -1,0 +1,391 @@
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+# Homebrew keg-only AVR GCC (QMK firmware builds for AVR boards, e.g. Corne rev1 / Pro Micro)
+export PATH="/opt/homebrew/opt/avr-gcc@14/bin:$PATH"
+
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Theme
+ZSH_THEME="candy"
+export DISABLE_AUTO_TITLE='true'
+fpath+=$HOME/.zsh/conda-zsh-completion
+
+# Configure zsh-vi-mode to not override other plugins
+function zvm_config() {
+  # Use C-c to exit insert mode
+  ZVM_VI_INSERT_ESCAPE_BINDKEY='^C'
+
+  # Only initialize the default Vi mode without overriding widgets
+  ZVM_INIT_MODE='sourcing'
+}
+
+function zvm_after_init() {
+  # Since C-c now exits insert mode, we need another key for interrupt
+  stty intr '^@'
+
+  # Ensure C-Space sends the interrupt signal in ZLE
+  bindkey -M viins '^@' send-break
+  bindkey -M vicmd '^@' send-break
+  bindkey '^Y' autosuggest-accept
+}
+JIRA_URL='https://udemy.atlassian.net'
+# Define widgets that zsh-vi-mode should NOT override
+function zvm_after_lazy_keybindings() {
+  # Bind history-substring-search
+  bindkey -M viins '^[[A' history-substring-search-up
+  bindkey -M viins '^[[B' history-substring-search-down
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
+
+  # Bind fzf keybindings if you use them
+  bindkey -M viins '^R' fzf-history-widget
+  bindkey -M viins '^T' fzf-file-widget
+}
+# Plugins
+plugins=(
+  # Terminal Enhancements & Navigation
+  kitty                # Kitty terminal integration and kittens
+  # Productivity & Aliases
+  aliases              # Extra handy aliases
+  # Version Control
+  git                  # Git shortcuts and completions
+  # Editor Integration
+  zsh-vi-mode              # Vi keybindings for command line editing
+  # History
+  zsh-history-substring-search  # Search history by typing in part of a previous command
+  fzf                  # Fuzzy file finder
+  zsh-autosuggestions      # Inline command suggestions based on history
+  zsh-syntax-highlighting  # Syntax highlighting as you type
+  # zsh-vi-man # old version
+  uv
+  jira
+)
+# Add these to test colors
+export LESS_TERMCAP_mb=$'\e[1;32m'      # begin blink
+export LESS_TERMCAP_md=$'\e[1;32m'      # begin bold (green)
+export LESS_TERMCAP_me=$'\e[0m'         # end mode
+export LESS_TERMCAP_se=$'\e[0m'         # end standout
+export LESS_TERMCAP_so=$'\e[01;33m'     # begin standout (yellow)
+export LESS_TERMCAP_ue=$'\e[0m'         # end underline
+export LESS_TERMCAP_us=$'\e[1;4;31m'    # begin underline (red)
+
+source $HOME/Code/zsh-vi-man/zsh-vi-man.plugin.zsh # new version
+
+source $ZSH/oh-my-zsh.sh
+
+alias zr="source ~/.zshrc"
+alias als="alias"
+alias th='/usr/local/bin/tmuxp load -y home > /dev/null 2>&1'
+alias ucs='uc setup'
+alias py='python'
+alias rf='make ruff;ruff check udemy'
+alias unit='uc monolith unittest'
+alias integ='uc monolith inttest'
+alias gcnn='git commit --no-verify --message'
+alias djshell='uc skaffold shell website-django'
+alias clr='clear'
+alias udemy-activate='source ~/.virtualenvs/udemy/bin/activate'
+alias c='pbcopy'
+alias p='pbpaste'
+alias tx='~/.local/bin/tmux-sessionizer ~/'
+alias tkk='tmux kill-server'
+
+ptt() {
+  pngpaste - | tesseract stdin stdout
+}
+
+
+ptto() {
+  pngpaste - \
+    | tesseract stdin stdout 2>/dev/null \
+    | tr '\n' ' ' \
+    | perl -ne 'if (m{(?:https?://)?(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,}(?:/[^\s"'\''<>)]*)?}) { print "$&\n" }' \
+    | head -n 1 \
+    | awk '{ if ($0 !~ /^https?:\/\//) print "https://" $0; else print $0 }' \
+    | xargs open
+}
+
+worknote() {
+  local type=$1
+  local vault="$HOME/Desktop/obsidian-vault"
+  local date=$(date +%Y-%m-%d)
+  local dow=$(date +%u)
+  local days_since_monday=$(( dow - 1 ))
+  local monday=$(date -v-${days_since_monday}d +%Y-%m-%d)
+  local file
+
+  case $type in
+    standup|s)
+      mkdir -p "$vault/work/meeting-notes/standups"
+      file="$vault/work/meeting-notes/standups/$monday-standup-week.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+# Standup Week — $monday
+
+## Mon
+-
+
+## Tue
+-
+
+## Wed
+-
+
+## Thu
+-
+
+## Fri
+-
+
+---
+
+## Pain points spotted this week
+-
+
+## Someone I could help unblock
+-
+EOF
+      fi
+      ;;
+    1on1|1)
+      mkdir -p "$vault/work/meeting-notes/cansu"
+      file="$vault/work/meeting-notes/cansu/$date-1on1.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, 1on1]
+---
+
+# 1on1 — $date
+
+## My agenda
+- [ ]
+
+## Her feedback
+
+## Action items — me
+
+## Action items — her
+
+## Reflection
+
+EOF
+      fi
+      ;;
+    techdisc|td)
+      mkdir -p "$vault/work/meeting-notes/tech-discussions"
+      file="$vault/work/meeting-notes/tech-discussions/$date-tech-discussion.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, tech-discussion]
+---
+
+# Tech Discussion — $date
+
+## Topic
+
+## Key points
+
+## Decision / outcome
+
+## My contribution
+
+## Follow-up
+
+EOF
+      fi
+      ;;
+    learning|l)
+      mkdir -p "$vault/work/meeting-notes/learning-sessions"
+      file="$vault/work/meeting-notes/learning-sessions/$date-learning.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, learning]
+---
+
+# Learning Session — $date
+
+## Topic
+
+## Key insight
+
+## How this applies to our stack
+
+## Something I could try or share
+
+EOF
+      fi
+      ;;
+    retro|r)
+      mkdir -p "$vault/work/meeting-notes/retros"
+      file="$vault/work/meeting-notes/retros/$date-retro.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, retro]
+---
+
+# Retro — $date
+
+## Themes
+
+## Recurring pain points
+
+> Cross-reference: [[pain-points]]
+
+## What I raised
+
+## Action items I own
+
+EOF
+      fi
+      ;;
+    incident|i)
+      mkdir -p "$vault/work/incidents"
+      file="$vault/work/incidents/$date-incident.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, incident]
+---
+
+# Incident — $date
+
+## What happened (timeline)
+
+## Root cause
+
+## What I learned
+
+## Prevention / follow-up
+
+EOF
+      fi
+      ;;
+    til|t)
+      mkdir -p "$vault/work/til"
+      file="$vault/work/til/$date-til.md"
+      if [ ! -f "$file" ]; then
+        cat > "$file" <<EOF
+---
+tags: [work, til]
+---
+
+# TIL — $date
+
+## What happened
+
+## Why
+
+## Fix / takeaway
+
+EOF
+      fi
+      ;;
+    pain|p)
+      file="$vault/work/team/pain-points.md"
+      mkdir -p "$(dirname "$file")"
+      printf '\n## [title] — %s\n- Who it affects:\n- Workaround:\n- Potential fix:\n- Status: open\n' "$date" >> "$file"
+      ;;
+    brag|b)
+      file="$vault/work/performance-review/brag-2026.md"
+      printf '- [%s] \n' "$date" >> "$file"
+      ;;
+    *)
+      echo "Usage: worknote {standup|1on1|techdisc|learning|retro|incident|til|pain|brag}"
+      echo "Short: worknote {s|1|td|l|r|i|p|b|t}"
+      return 1
+      ;;
+  esac
+
+  ${EDITOR:-nvim} "$file"
+}
+
+alias pttc='ptt | pbcopy'
+
+# User configuration
+
+# Enable bracketed paste
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+
+# Vi mode cursor shapes
+cursor_block='\e[2 q'
+cursor_beam='\e[6 q'
+
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] ||
+     [[ $1 = 'block' ]]; then
+    echo -ne $cursor_block
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne $cursor_beam
+  fi
+}
+
+zle -N zle-keymap-select
+echo -ne $cursor_beam
+
+_fix_cursor() {
+   echo -ne $cursor_beam
+}
+
+precmd_functions+=(_fix_cursor)
+
+nvim_grep() {
+  local pattern=$1
+  shift
+  # Find file list as NULL-separated (-z, -Z, -0)
+  local -a files
+  files=("${(@f)$(git ls-files --others --cached --exclude-standard -z | grep -zv 'test' | xargs -0 grep -lZ -- "${pattern}" | tr '\0' '\n')}")
+  if [[ ${#files} -eq 0 ]]; then
+    echo "No matches"
+    return 1
+  fi
+  nvim +"silent! /$pattern" "${files[@]}" $@
+}
+
+if [ -z "$TMUX" ] \
+  && [ "$TERM" = "xterm-256color" ] \
+  && [ "$TERM_PROGRAM" != "vscode" ] \
+  && [ "$TERM_PROGRAM" != "iTerm.app" ] \
+  && [ "$TERMINAL_EMULATOR" != "JetBrains-JediTerm" ]; then
+  ~/.local/bin/tmux-sessionizer ~/
+fi
+
+# Auto-activate virtual environments
+auto_activate_venv() {
+  # Special case for udemy-django
+  if [[ "$PWD" == "$HOME/Code/udemy-django"* ]]; then
+    if [[ -f "$HOME/.virtualenvs/udemy/bin/activate" ]]; then
+      source "$HOME/.virtualenvs/udemy/bin/activate"
+      return
+    fi
+  fi
+
+  # Fallback: check for .venv in current directory or parent directories
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/.venv/bin/activate" ]]; then
+      source "$dir/.venv/bin/activate"
+      return
+    fi
+    dir="$(dirname "$dir")"
+  done
+}
+
+# Run on every directory change
+chpwd_functions+=(auto_activate_venv)
+
+# Run once when shell starts
+auto_activate_venv
+
+source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+export PATH="$PATH:/Users/tuna.cuma/Library/Application Support/Coursier/bin"

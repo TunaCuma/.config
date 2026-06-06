@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+HOME_PKG="$CONFIG_DIR/home"
+TARGET="$HOME"
+BACKUP_DIR="$CONFIG_DIR/.dotfiles-backup"
+INTEGRATE="$CONFIG_DIR/bin/uc-shell-integrate"
+
+die() {
+  echo "error: $*" >&2
+  exit 1
+}
+
+ensure_stow() {
+  if command -v stow >/dev/null 2>&1; then
+    return
+  fi
+  if command -v brew >/dev/null 2>&1; then
+    echo "Installing GNU stow via Homebrew..."
+    brew install stow
+    return
+  fi
+  die "GNU stow is required. Install with: brew install stow"
+}
+
+# uc mutates these directly — never stow them
+UC_MANAGED=(
+  .zshrc
+  .zprofile
+  .bashrc
+)
+
+backup_and_remove_conflicts() {
+  mkdir -p "$BACKUP_DIR"
+  local entry rel target link_dest pkg_path target_path
+  while IFS= read -r -d '' entry; do
+    rel="${entry#"$HOME_PKG"/}"
+    for uc in "${UC_MANAGED[@]}"; do
+      [[ "$rel" == "$uc" ]] && continue 2
+    done
+    target="$TARGET/$rel"
+    pkg_path="$(realpath -m "$HOME_PKG/$rel")"
+    target_path="$(realpath -m "$target" 2>/dev/null || true)"
+    if [[ -n "$target_path" && ( "$target_path" == "$pkg_path" || "$target_path" == "$pkg_path"/* ) ]]; then
+      continue
+    fi
+    if [[ -e "$target" && ! -L "$target" ]]; then
+      echo "Backing up existing $target"
+      mkdir -p "$BACKUP_DIR/$(dirname "$rel")"
+      cp -a "$target" "$BACKUP_DIR/$rel"
+      rm -rf "$target"
+    elif [[ -L "$target" ]]; then
+      link_dest="$(readlink "$target")"
+      if [[ "$link_dest" != "$HOME_PKG/$rel" && "$link_dest" != *"/$rel" ]]; then
+        echo "Replacing symlink $target -> $link_dest"
+        rm "$target"
+      fi
+    fi
+  done < <(find "$HOME_PKG" -mindepth 1 \( -type f -o -type d \) -print0)
+}
+
+stow_home() {
+  echo "Stowing dotfiles to $TARGET ..."
+  (
+    cd "$CONFIG_DIR"
+    stow --verbose --restow --target="$TARGET" home
+  )
+}
+
+main() {
+  ensure_stow
+  backup_and_remove_conflicts
+  stow_home
+  "$INTEGRATE" "$BACKUP_DIR"
+  echo
+  echo "Done. Symlinked from $HOME_PKG:"
+  echo "  .zshrc.personal  (your custom zsh config)"
+  echo "  .gitconfig, .tmux-sessionizer, .bash_profile, ..."
+  echo
+  echo "Not in git (managed by uc setup):"
+  printf '  %s\n' "${UC_MANAGED[@]}"
+  echo
+  echo "LeetCode workspace: separate repo at ~/.leetcode (TunaCuma/leetcode-home)"
+}
+
+main "$@"

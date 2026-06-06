@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Reject commits that contain likely secrets.
+set -euo pipefail
+
+patterns=(
+  'ghp_[A-Za-z0-9]{20,}'
+  'github_pat_[A-Za-z0-9_]+'
+  'ATATT[A-Za-z0-9+/=_-]{20,}'
+  'ddapp_[A-Za-z0-9]+'
+  'sk-ant-api[0-9]+-'
+  'ART_API_KEY=[^[:space:]]+'
+  'ART_PYPI_PASSWORD=[^[:space:]]+'
+  'GITHUB_PACKAGES_TOKEN=[^[:space:]]+'
+  'ATLASSIAN_API_TOKEN=[^[:space:]]+'
+  'DD_CLIENT_API_KEY=[^[:space:]]+'
+  'DD_CLIENT_APP_KEY=[^[:space:]]+'
+  'https?://[^/@[:space:]]+:[^/@[:space:]]+@'
+  'session = .eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.'
+  'csrf = .[A-Za-z0-9]{20,}'
+)
+
+staged="$(git diff --cached --name-only --diff-filter=ACM)"
+[[ -z "$staged" ]] && exit 0
+
+found=0
+for file in $staged; do
+  [[ -f "$file" ]] || continue
+  [[ "$file" == .githooks/* ]] && continue
+  content="$(git show ":$file")"
+  for pattern in "${patterns[@]}"; do
+    if echo "$content" | grep -qE "$pattern"; then
+      echo "pre-commit: possible secret in $file (matched: $pattern)" >&2
+      found=1
+    fi
+  done
+done
+
+if [[ $found -ne 0 ]]; then
+  echo "pre-commit: aborting. Remove secrets before committing." >&2
+  exit 1
+fi

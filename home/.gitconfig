@@ -1,0 +1,37 @@
+
+# **********UCBLOCKSTART:ghauthcreds**********
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+# ***********UCBLOCKEND:ghauthcreds***********
+[gpg "ssh"]
+	allowedsignersfile = ~/.ssh/allowed_signers
+[gpg]
+	format = ssh
+[user]
+	signingkey = ~/.ssh/id_ed25519
+	email = tuna.cuma@udemy.com
+	name = Tuna Cuma
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[push]
+	autoSetupRemote = true
+[safe]
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
+	directory = *
