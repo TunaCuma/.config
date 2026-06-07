@@ -1,3 +1,6 @@
+[submodule "emacs"]
+	path = emacs
+	url = https://github.com/doomemacs/doomemacs.git
 [submodule "nvim"]
 	path = nvim
 	url = https://github.com/TunaCuma/nvim_prime.git

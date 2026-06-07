@@ -2,10 +2,10 @@
 # **********UCBLOCKSTART:ghauthcreds**********
 [credential "https://github.com"]
 	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !/usr/bin/gh auth git-credential
 # ***********UCBLOCKEND:ghauthcreds***********
 [gpg "ssh"]
 	allowedsignersfile = ~/.ssh/allowed_signers

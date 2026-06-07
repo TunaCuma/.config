@@ -386,6 +386,10 @@ chpwd_functions+=(auto_activate_venv)
 # Run once when shell starts
 auto_activate_venv
 
-source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+if command -v brew >/dev/null 2>&1; then
+  source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+elif [[ -f "$ZSH_CUSTOM/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
+  source "$ZSH_CUSTOM/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
+fi
 
 export PATH="$PATH:/Users/tuna.cuma/Library/Application Support/Coursier/bin"
