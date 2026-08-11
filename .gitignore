@@ -14,6 +14,22 @@ uv/uv.toml
 .env-mcp
 .databrickscfg
 .okta_aws_login_config
+gh/hosts.yml
+
+# Machine-local runtime state
+chromium/
+google-chrome/
+obsidian/
+dconf/
+fcitx/
+fcitx5/
+ibus/
+pulse/
+go/telemetry/
+omarchy/current/
+gtk-3.0/
+xournalpp/
+lazygit/config.yml
 
 # Dependencies and caches
 opencode/node_modules/

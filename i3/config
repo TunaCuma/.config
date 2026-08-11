@@ -36,8 +36,8 @@ bindsym $altMod+d workspace 2; exec --no-startup-id firefox https://local.drizzl
 
 bindsym $mod+b exec "rofi -show bookmark"
 bindsym $mod+t exec "rofi -show translate"
-bindsym $mod+o exec --no-startup-id "/home/tuna/.local/bin/emoji-picker"
-bindsym $mod+y exec --no-startup-id "/home/tuna/.local/bin/youtube_search.sh"
+bindsym $mod+o exec --no-startup-id "$HOME/.local/bin/emoji-picker"
+bindsym $mod+y exec --no-startup-id "$HOME/.local/bin/youtube_search.sh"
 
 bindsym $mod+Tab workspace back_and_forth 
 # exec --no-startup-id ~/.config/i3/scripts/unity-fix.sh
